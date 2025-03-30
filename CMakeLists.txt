@@ -663,3 +663,11 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   include(CPack)
 endif()
+
+if(DREAMCAST)
+  list(APPEND DEVILUTIONX_PLATFORM_SOURCES
+    Source/platform/dreamcast/audio.cpp
+    Source/platform/dreamcast/audio.h)
+  list(APPEND DEVILUTIONX_PLATFORM_LIBRARIES
+    "${SDL_LIBRARY}")
+endif()

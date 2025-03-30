@@ -24,6 +24,10 @@
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"
 
+#ifdef __DREAMCAST__
+#include "platform/dreamcast/audio.h"
+#endif
+
 namespace devilution {
 
 bool gbSndInited;
@@ -59,16 +63,23 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 	if (!ref.ok())
 		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 
-#ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
-#if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
-	stream = true;
+#ifdef __DREAMCAST__
+	// For Dreamcast, determine streaming based on file type and size
+	size_t size = ref.size();
+	stream = ShouldStreamAudio(path, size);
+	LogAudioMemoryUsage(path, size, stream);
 #else
-	size_t size;
-	if (!stream) {
-		size = ref.size();
-		stream = size >= STREAM_ALL_AUDIO_MIN_FILE_SIZE;
-	}
-#endif
+	#ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
+	#if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
+		stream = true;
+	#else
+		size_t size;
+		if (!stream) {
+			size = ref.size();
+			stream = size >= STREAM_ALL_AUDIO_MIN_FILE_SIZE;
+		}
+	#endif
+	#endif
 #endif
 
 	if (stream) {
@@ -190,6 +201,10 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 #ifndef NOSOUND
+#ifdef __DREAMCAST__
+	// For Dreamcast, we use LoadSoundEffectForDreamcast to track memory usage first
+	LoadSoundEffectForDreamcast(snd.get(), path);
+#endif
 	LoadAudioFile(path, stream, /*errorDialog=*/true, snd->DSB);
 #endif
 	return snd;
@@ -223,6 +238,11 @@ void snd_init()
 
 	duplicateSoundsMutex.emplace();
 	gbSndInited = true;
+	
+#ifdef __DREAMCAST__
+	// Initialize Dreamcast-specific audio optimizations
+	InitDreamcastAudio();
+#endif
 }
 
 void snd_deinit()
@@ -276,7 +296,7 @@ void music_start(_music_id nTrack)
 	else
 		trackPath = MusicTracks[nTrack];
 
-#ifdef DISABLE_STREAMING_MUSIC
+#if defined(DISABLE_STREAMING_MUSIC) && !defined(__DREAMCAST__)
 	const bool stream = false;
 #else
 	const bool stream = true;
@@ -296,6 +316,11 @@ void music_start(_music_id nTrack)
 	}
 
 	sgnMusicTrack = nTrack;
+	
+#ifdef __DREAMCAST__
+	// Check memory usage after starting music
+	OptimizeAudioMemoryUsage();
+#endif
 }
 
 void sound_disable_music(bool disable)
