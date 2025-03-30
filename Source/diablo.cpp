@@ -125,6 +125,9 @@ bool HeadlessMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
+bool DBL_MEM = false; // Default to standard 16MB RAM mode
+
+bool SpawnOptionsUsed;
 
 #ifdef _DEBUG
 bool DebugDisableNetworkTimeout = false;

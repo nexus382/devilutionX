@@ -1,0 +1,2 @@
+D:/DreamSDK/bin/ar.exe qc liblibdevilutionx_sdl2_to_1_2_backports.a CMakeFiles/libdevilutionx_sdl2_to_1_2_backports.dir/utils/sdl2_to_1_2_backports.cpp.obj CMakeFiles/libdevilutionx_utils_console.dir/utils/console.cpp.obj
+D:/DreamSDK/bin/ranlib.exe liblibdevilutionx_sdl2_to_1_2_backports.a

@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/download-simpleini-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/verify-simpleini-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/extract-simpleini-populate.cmake
+source_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-src
+work_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps
+url(s)=https://github.com/brofield/simpleini/archive/56499b5af5d2195c6acfc58c4630b70e0c9c4c21.tar.gz
+hash=MD5=02a561cea03ea11acb65848318ec4a81
+      no_extract=
+

@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/libfmt-populate-prefix/src/libfmt-populate-stamp/download-libfmt-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/libfmt-populate-prefix/src/libfmt-populate-stamp/verify-libfmt-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/libfmt-populate-prefix/src/libfmt-populate-stamp/extract-libfmt-populate.cmake
+source_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-src
+work_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps
+url(s)=https://github.com/fmtlib/fmt/archive/02537548f3a9efb5f3b83755acf50c8a16ba58c8.tar.gz
+hash=MD5=6901c6945cd311117d96baaa6d067380
+      no_extract=
+

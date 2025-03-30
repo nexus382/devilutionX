@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/lua_static.dir/src/lapi.c.obj"
+  "CMakeFiles/lua_static.dir/src/lauxlib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lbaselib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lcode.c.obj"
+  "CMakeFiles/lua_static.dir/src/lcorolib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lctype.c.obj"
+  "CMakeFiles/lua_static.dir/src/ldblib.c.obj"
+  "CMakeFiles/lua_static.dir/src/ldebug.c.obj"
+  "CMakeFiles/lua_static.dir/src/ldo.c.obj"
+  "CMakeFiles/lua_static.dir/src/ldump.c.obj"
+  "CMakeFiles/lua_static.dir/src/lfunc.c.obj"
+  "CMakeFiles/lua_static.dir/src/lgc.c.obj"
+  "CMakeFiles/lua_static.dir/src/linit.c.obj"
+  "CMakeFiles/lua_static.dir/src/liolib.c.obj"
+  "CMakeFiles/lua_static.dir/src/llex.c.obj"
+  "CMakeFiles/lua_static.dir/src/lmathlib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lmem.c.obj"
+  "CMakeFiles/lua_static.dir/src/loadlib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lobject.c.obj"
+  "CMakeFiles/lua_static.dir/src/lopcodes.c.obj"
+  "CMakeFiles/lua_static.dir/src/loslib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lparser.c.obj"
+  "CMakeFiles/lua_static.dir/src/lstate.c.obj"
+  "CMakeFiles/lua_static.dir/src/lstring.c.obj"
+  "CMakeFiles/lua_static.dir/src/lstrlib.c.obj"
+  "CMakeFiles/lua_static.dir/src/ltable.c.obj"
+  "CMakeFiles/lua_static.dir/src/ltablib.c.obj"
+  "CMakeFiles/lua_static.dir/src/ltm.c.obj"
+  "CMakeFiles/lua_static.dir/src/lundump.c.obj"
+  "CMakeFiles/lua_static.dir/src/lutf8lib.c.obj"
+  "CMakeFiles/lua_static.dir/src/lvm.c.obj"
+  "CMakeFiles/lua_static.dir/src/lzio.c.obj"
+  "liblua_static.a"
+  "liblua_static.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/lua_static.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

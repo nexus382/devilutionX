@@ -1,0 +1,3 @@
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/lua-subbuild/CMakeFiles/lua-populate.dir
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/lua-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/lua-subbuild/CMakeFiles/rebuild_cache.dir

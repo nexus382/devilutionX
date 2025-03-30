@@ -1,0 +1,2 @@
+D:/DreamSDK/bin/ar.exe qc libfmt.a CMakeFiles/fmt.dir/src/format.cc.obj
+D:/DreamSDK/bin/ranlib.exe libfmt.a

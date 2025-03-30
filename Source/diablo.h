@@ -79,6 +79,7 @@ extern DVL_API_FOR_TEST bool HeadlessMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
+extern bool DBL_MEM; // Flag to indicate if 32MB RAM mod is available
 
 extern MouseActionType LastMouseButtonAction;
 

@@ -468,4 +468,47 @@ void MainWndProc(const SDL_Event &event)
 #endif
 }
 
+#ifdef __DREAMCAST__
+#include <kos.h>
+
+/**
+ * @brief Check if 32MB RAM is available (Flycast with 32MB RAM mod setting)
+ * Sets the global DBL_MEM flag accordingly
+ */
+void CheckDoubleMemoryMode()
+{
+	// This will attempt to allocate more than 16MB of memory
+	// If it succeeds, we're running with the 32MB RAM mod
+	void* testPtr = malloc(17 * 1024 * 1024); // Try to allocate 17MB
+	if (testPtr != nullptr) {
+		// We have more than 16MB RAM available
+		DBL_MEM = true;
+		free(testPtr);
+		LogVerbose("Running with 32MB RAM mode enabled");
+	} else {
+		// Standard 16MB RAM
+		DBL_MEM = false;
+		LogVerbose("Running with standard 16MB RAM");
+	}
+}
+#endif
+
+void engine_init()
+{
+#ifdef __DREAMCAST__
+	CheckDoubleMemoryMode();
+#endif
+	gbRunGame = true;
+	gbRunGameResult = true;
+	tbuff = std::make_unique<uint8_t[]>(2 * sizeof(WORD));
+	zeroarr = std::make_unique<uint8_t[]>(sizeof(WORD));
+
+	dx_init();
+#ifndef USE_SDL1
+	SDL_StopTextInput(); // Default state is ENABLE, that's wrong
+#endif
+
+	UserConWriteMakeChunks();
+}
+
 } // namespace devilution

@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sol2-subbuild/sol2-populate-prefix/src/sol2-populate-stamp/download-sol2-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sol2-subbuild/sol2-populate-prefix/src/sol2-populate-stamp/verify-sol2-populate.cmake;COMMAND;C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sol2-subbuild/sol2-populate-prefix/src/sol2-populate-stamp/extract-sol2-populate.cmake
+source_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sol2-src
+work_dir=C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps
+url(s)=https://github.com/ThePhD/sol2/archive/9c882a28fdb6f4ad79a53a4191b43ce48a661175.tar.gz
+hash=MD5=2637c3fcdcce3ff34b36437c1d3b99d1
+      no_extract=
+

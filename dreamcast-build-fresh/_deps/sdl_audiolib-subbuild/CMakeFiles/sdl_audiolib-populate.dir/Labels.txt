@@ -1,0 +1,14 @@
+# Target labels
+ sdl_audiolib-populate
+# Source files and their labels
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/CMakeFiles/sdl_audiolib-populate
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/CMakeFiles/sdl_audiolib-populate.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/CMakeFiles/sdl_audiolib-populate-complete.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-build.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-configure.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-download.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-install.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-mkdir.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-patch.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-test.rule
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/sdl_audiolib-subbuild/sdl_audiolib-populate-prefix/src/sdl_audiolib-populate-stamp/sdl_audiolib-populate-update.rule

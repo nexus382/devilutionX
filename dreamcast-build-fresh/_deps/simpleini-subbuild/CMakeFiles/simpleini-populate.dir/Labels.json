@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/CMakeFiles/simpleini-populate"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/CMakeFiles/simpleini-populate.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/CMakeFiles/simpleini-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/simpleini-subbuild/simpleini-populate-prefix/src/simpleini-populate-stamp/simpleini-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"simpleini-populate"
+		],
+		"name" : "simpleini-populate"
+	}
+}

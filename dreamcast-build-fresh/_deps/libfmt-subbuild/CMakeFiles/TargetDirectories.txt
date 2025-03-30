@@ -1,0 +1,3 @@
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/CMakeFiles/libfmt-populate.dir
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/antho/flycast/devilutionX/dreamcast-build-fresh/_deps/libfmt-subbuild/CMakeFiles/rebuild_cache.dir
