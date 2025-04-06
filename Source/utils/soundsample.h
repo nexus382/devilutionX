@@ -9,6 +9,10 @@
 #include "engine/sound_defs.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 
+#ifdef __DREAMCAST__
+#include <dc/sound/sound.h>
+#endif
+
 namespace devilution {
 
 class SoundSample final {
@@ -19,7 +23,11 @@ public:
 
 	[[nodiscard]] bool IsLoaded() const
 	{
+#ifdef __DREAMCAST__
+		return stream_ != nullptr || kosAdpcmStream_ != nullptr;
+#else
 		return stream_ != nullptr;
+#endif
 	}
 
 	void Release();
@@ -27,6 +35,12 @@ public:
 
 	// Returns 0 on success.
 	int SetChunkStream(std::string filePath, bool isMp3, bool logErrors = true);
+
+#ifdef __DREAMCAST__
+	// KOS-specific functions for Yamaha ADPCM
+	int SetKosADPCM(std::string filePath);
+	int SetKosStreamingADPCM(std::string filePath);
+#endif
 
 	void SetFinishCallback(Aulib::Stream::Callback &&callback)
 	{
@@ -44,11 +58,28 @@ public:
 
 	[[nodiscard]] bool IsStreaming() const
 	{
+#ifdef __DREAMCAST__
+		// For ADPCM streams, check the type using file_path_ since that will always be set
+		if (kosAdpcmStream_ && !file_path_.empty()) {
+			// If using KOS streaming, just return true as we use the file path
+			return true;
+		}
+#endif
 		return file_data_ == nullptr;
 	}
 
 	int DuplicateFrom(const SoundSample &other)
 	{
+#ifdef __DREAMCAST__
+		if (other.kosAdpcmStream_) {
+			// Handle based on whether it's streaming or not
+			if (other.IsStreaming()) {
+				return SetKosStreamingADPCM(other.file_path_);
+			} else {
+				return SetKosADPCM(other.file_path_);
+			}
+		}
+#endif
 		if (other.IsStreaming())
 			return SetChunkStream(other.file_path_, other.isMp3_);
 		return SetChunk(other.file_data_, other.file_data_size_, other.isMp3_);
@@ -74,6 +105,12 @@ public:
 	 */
 	void Stop()
 	{
+#ifdef __DREAMCAST__
+		if (kosAdpcmStream_) {
+			kosAdpcmStream_->stop();
+			return;
+		}
+#endif
 		stream_->stop();
 	}
 
@@ -82,11 +119,23 @@ public:
 
 	void Mute()
 	{
+#ifdef __DREAMCAST__
+		if (kosAdpcmStream_) {
+			kosAdpcmStream_->mute();
+			return;
+		}
+#endif
 		stream_->mute();
 	}
 
 	void Unmute()
 	{
+#ifdef __DREAMCAST__
+		if (kosAdpcmStream_) {
+			kosAdpcmStream_->unmute();
+			return;
+		}
+#endif
 		stream_->unmute();
 	}
 
@@ -106,6 +155,12 @@ private:
 	bool isMp3_;
 
 	std::unique_ptr<Aulib::Stream> stream_;
+	
+#ifdef __DREAMCAST__
+	// For KOS Yamaha ADPCM support
+	class KosADPCMStream;
+	std::unique_ptr<KosADPCMStream> kosAdpcmStream_;
+#endif
 };
 
 } // namespace devilution

@@ -24,6 +24,11 @@
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"
 
+// todo remove this
+// changing this value in dreamcast.cmake causes the whole project to recompile
+// redefined here to only recompile sound.cpp
+#define STREAM_ALL_AUDIO_MIN_FILE_SIZE 10 * 1024
+
 namespace devilution {
 
 bool gbSndInited;
@@ -59,6 +64,53 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 	if (!ref.ok())
 		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 
+#ifdef __DREAMCAST__
+	// Check if file is ADPCM Yamaha format (usually with .wav extension)
+	bool isYamahaADPCM = false;
+	if (!isMp3) {
+		// Get file extension
+		size_t dotPos = foundPath.find_last_of('.');
+		if (dotPos != std::string::npos) {
+			std::string ext = foundPath.substr(dotPos);
+			// Check for WAV extension
+			if (strcasecmp(ext.c_str(), ".wav") == 0) {
+				// Open file to check header
+				AssetHandle handle = OpenAsset(ref);
+				if (handle.ok()) {
+					// Buffer for WAV header
+					uint8_t header[44];
+					if (handle.read(header, 44)) {
+						// Check for RIFF WAV header
+						if (memcmp(header, "RIFF", 4) == 0 && memcmp(header + 8, "WAVE", 4) == 0) {
+							// Check format information (offset 20) for Yamaha ADPCM (format code 0x0020)
+							uint16_t formatCode = header[20] | (header[21] << 8);
+							if (formatCode == 0x0020) {
+								isYamahaADPCM = true;
+								Log(">AUDIO: Detected Yamaha ADPCM format: {}", foundPath);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// If it's Yamaha ADPCM format, use KOS native functions instead of SDL
+	if (isYamahaADPCM) {
+		Log(">AUDIO: Loading Yamaha ADPCM file {} with KOS native functions", foundPath);
+		print_ram_stats();
+		
+		// For streaming audio
+		if (stream) {
+			return result.SetKosStreamingADPCM(foundPath);
+		} 
+		// For non-streaming audio
+		else {
+			return result.SetKosADPCM(foundPath);
+		}
+	}
+#endif
+
 #ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
 #if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
 	stream = true;
@@ -71,6 +123,11 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 #endif
 #endif
 
+#ifdef __DREAMCAST__
+	Log(">AUDIO: Loading audio file {} with streaming {} ({} kilobytes)", foundPath, stream, ref.size() / 1024.0);
+	print_ram_stats();
+	Log("\n\n\n");
+#endif
 	if (stream) {
 		if (result.SetChunkStream(foundPath, isMp3, /*logErrors=*/true) != 0) {
 			if (errorDialog) {
@@ -95,6 +152,7 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 			return false;
 		}
 		const int error = result.SetChunk(waveFile, size, isMp3);
+
 		if (error != 0) {
 			if (errorDialog)
 				ErrSdl();
@@ -204,6 +262,9 @@ TSnd::~TSnd()
 
 void snd_init()
 {
+#ifdef __DREAMCAST__
+	::snd_init();
+#endif
 	sgOptions.Audio.soundVolume.SetValue(CapVolume(*sgOptions.Audio.soundVolume));
 	gbSoundOn = *sgOptions.Audio.soundVolume > VOLUME_MIN;
 	sgbSaveSoundOn = gbSoundOn;
@@ -228,6 +289,7 @@ void snd_init()
 void snd_deinit()
 {
 	if (gbSndInited) {
+		snd_shutdown();
 		Aulib::quit();
 		duplicateSoundsMutex = std::nullopt;
 	}
