@@ -21,6 +21,13 @@
 #include "utils/math.h"
 #include "utils/stubs.h"
 
+#ifdef __DREAMCAST__
+#include <kos.h>
+#include <dc/sound/sound.h>
+#include <dc/sound/stream.h>
+#include "memory_stats.h"
+#endif
+
 namespace devilution {
 
 namespace {
@@ -89,6 +96,124 @@ float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 
 } // namespace
 
+#ifdef __DREAMCAST__
+// Custom stream implementation for Dreamcast Yamaha ADPCM
+class KosADPCMStream {
+public:
+	KosADPCMStream() : 
+		isPlaying_(false),
+		isStream_(false),
+		soundHandle_(-1) {}
+
+	~KosADPCMStream() {
+		stop();
+	}
+
+	bool play(int numIterations) {
+		if (soundHandle_ < 0)
+			return false;
+
+		isPlaying_ = true;
+		if (isStream_) {
+			// For streaming audio
+			snd_stream_start(soundHandle_, numIterations == 0 ? SND_STREAM_LOOP : SND_STREAM_ONCE);
+		} else {
+			// For sound effects
+			snd_sfx_play(soundHandle_, numIterations == 0 ? 255 : 254, 0);
+		}
+		return true;
+	}
+
+	void stop() {
+		if (soundHandle_ >= 0) {
+			if (isStream_) {
+				snd_stream_stop(soundHandle_);
+				snd_stream_destroy(soundHandle_);
+			} else {
+				snd_sfx_stop(soundHandle_);
+				snd_sfx_unload(soundHandle_);
+			}
+			soundHandle_ = -1;
+		}
+		isPlaying_ = false;
+	}
+
+	bool isPlaying() const {
+		return isPlaying_;
+	}
+
+	void setVolume(float volume) {
+		if (soundHandle_ >= 0) {
+			// Convert 0-1 float to 0-255 int
+			int vol = static_cast<int>(volume * 255.0f);
+			if (isStream_) {
+				snd_stream_volume(soundHandle_, vol);
+			} else {
+				// For SFX, we'd need to store the pan and apply both
+				// Not directly supported by KOS API
+			}
+		}
+	}
+
+	void setStereoPosition(float pan) {
+		// Stereo pan not directly supported by KOS
+		// Would need custom implementation
+	}
+
+	void mute() {
+		if (soundHandle_ >= 0) {
+			if (isStream_) {
+				snd_stream_volume(soundHandle_, 0);
+			}
+		}
+	}
+
+	void unmute() {
+		// Would need to restore previous volume
+	}
+
+	bool isMuted() const {
+		// Would need to track mute state
+		return false;
+	}
+
+	// Initialize as streaming ADPCM
+	bool initStreamingADPCM(const char* filePath) {
+		isStream_ = true;
+		
+		// Open ADPCM stream file
+		soundHandle_ = snd_stream_load(filePath);
+		if (soundHandle_ < 0) {
+			LogError(LogCategory::Audio, "Failed to load ADPCM stream: {}", filePath);
+			return false;
+		}
+		
+		Log(LogCategory::Audio, "Loaded ADPCM stream: {} (handle: {})", filePath, soundHandle_);
+		return true;
+	}
+
+	// Initialize as SFX ADPCM
+	bool initADPCMSfx(const char* filePath) {
+		isStream_ = false;
+		
+		// Load SFX from file
+		soundHandle_ = snd_sfx_load(filePath);
+		if (soundHandle_ < 0) {
+			LogError(LogCategory::Audio, "Failed to load ADPCM SFX: {}", filePath);
+			return false;
+		}
+		
+		Log(LogCategory::Audio, "Loaded ADPCM SFX: {} (handle: {})", filePath, soundHandle_);
+		return true;
+	}
+
+private:
+	bool isPlaying_;
+	bool isStream_;
+	int soundHandle_; // KOS sound handle
+};
+#endif
+
 ///// SoundSample /////
 
 void SoundSample::Release()
@@ -96,6 +221,11 @@ void SoundSample::Release()
 	stream_ = nullptr;
 	file_data_ = nullptr;
 	file_data_size_ = 0;
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		kosAdpcmStream_ = nullptr;
+	}
+#endif
 }
 
 /**
@@ -103,17 +233,70 @@ void SoundSample::Release()
  */
 bool SoundSample::IsPlaying()
 {
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		return kosAdpcmStream_->isPlaying();
+	}
+#endif
 	return stream_ && stream_->isPlaying();
 }
 
 bool SoundSample::Play(int numIterations)
 {
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		return kosAdpcmStream_->play(numIterations);
+	}
+#endif
+
 	if (!stream_->play(numIterations)) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return false;
 	}
 	return true;
 }
+
+#ifdef __DREAMCAST__
+int SoundSample::SetKosADPCM(std::string filePath)
+{
+	// Release any existing resources
+	Release();
+	
+	// Create new KOS ADPCM stream handler
+	kosAdpcmStream_ = std::make_unique<KosADPCMStream>();
+	
+	// Initialize as non-streaming SFX
+	if (!kosAdpcmStream_->initADPCMSfx(filePath.c_str())) {
+		kosAdpcmStream_ = nullptr;
+		return -1;
+	}
+	
+	file_path_ = std::move(filePath);
+	isMp3_ = false;  // Not an MP3
+	
+	return 0;
+}
+
+int SoundSample::SetKosStreamingADPCM(std::string filePath)
+{
+	// Release any existing resources
+	Release();
+	
+	// Create new KOS ADPCM stream handler
+	kosAdpcmStream_ = std::make_unique<KosADPCMStream>();
+	
+	// Initialize as streaming audio
+	if (!kosAdpcmStream_->initStreamingADPCM(filePath.c_str())) {
+		kosAdpcmStream_ = nullptr;
+		return -1;
+	}
+	
+	file_path_ = std::move(filePath);
+	isMp3_ = false;  // Not an MP3
+	
+	return 0;
+}
+#endif
 
 int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors)
 {
@@ -158,16 +341,37 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 
 void SoundSample::SetVolume(int logVolume, int logMin, int logMax)
 {
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		float linearVolume = VolumeLogToLinear(logVolume, logMin, logMax);
+		kosAdpcmStream_->setVolume(linearVolume);
+		return;
+	}
+#endif
 	stream_->setVolume(VolumeLogToLinear(logVolume, logMin, logMax));
 }
 
 void SoundSample::SetStereoPosition(int logPan)
 {
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		float linearPan = PanLogToLinear(logPan);
+		kosAdpcmStream_->setStereoPosition(linearPan);
+		return;
+	}
+#endif
 	stream_->setStereoPosition(PanLogToLinear(logPan));
 }
 
 int SoundSample::GetLength() const
 {
+#ifdef __DREAMCAST__
+	if (kosAdpcmStream_) {
+		// KOS doesn't provide an easy way to get length
+		// Return a default value or 0
+		return 0;
+	}
+#endif
 	if (!stream_)
 		return 0;
 	return static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count());

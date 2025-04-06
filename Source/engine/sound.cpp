@@ -64,6 +64,53 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 	if (!ref.ok())
 		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
 
+#ifdef __DREAMCAST__
+	// Check if file is ADPCM Yamaha format (usually with .wav extension)
+	bool isYamahaADPCM = false;
+	if (!isMp3) {
+		// Get file extension
+		size_t dotPos = foundPath.find_last_of('.');
+		if (dotPos != std::string::npos) {
+			std::string ext = foundPath.substr(dotPos);
+			// Check for WAV extension
+			if (strcasecmp(ext.c_str(), ".wav") == 0) {
+				// Open file to check header
+				AssetHandle handle = OpenAsset(ref);
+				if (handle.ok()) {
+					// Buffer for WAV header
+					uint8_t header[44];
+					if (handle.read(header, 44)) {
+						// Check for RIFF WAV header
+						if (memcmp(header, "RIFF", 4) == 0 && memcmp(header + 8, "WAVE", 4) == 0) {
+							// Check format information (offset 20) for Yamaha ADPCM (format code 0x0020)
+							uint16_t formatCode = header[20] | (header[21] << 8);
+							if (formatCode == 0x0020) {
+								isYamahaADPCM = true;
+								Log(">AUDIO: Detected Yamaha ADPCM format: {}", foundPath);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// If it's Yamaha ADPCM format, use KOS native functions instead of SDL
+	if (isYamahaADPCM) {
+		Log(">AUDIO: Loading Yamaha ADPCM file {} with KOS native functions", foundPath);
+		print_ram_stats();
+		
+		// For streaming audio
+		if (stream) {
+			return result.SetKosStreamingADPCM(foundPath);
+		} 
+		// For non-streaming audio
+		else {
+			return result.SetKosADPCM(foundPath);
+		}
+	}
+#endif
+
 #ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
 #if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
 	stream = true;
